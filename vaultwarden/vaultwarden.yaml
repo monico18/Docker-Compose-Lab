@@ -1,0 +1,9 @@
+version: "3"
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    volumes:
+      - /path/to/vw-data/:/data/

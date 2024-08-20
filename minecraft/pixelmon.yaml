@@ -1,0 +1,17 @@
+services:
+  pixelmon:
+      image: itzg/minecraft-server:java8-multiarch
+      ports:
+        - "25566:25565"
+      environment:
+        EULA: "true"
+        MOD_PLATFORM: AUTO_CURSEFORGE
+        CF_API_KEY: <api_key>
+        CF_SLUG: the-pixelmon-modpack
+        CF_FILENAME_MATCHER: "9.1.2"
+        MEMORY: 4G
+      volumes:
+        - ./pixelmon-data:/data
+
+volumes:
+  pixelmon-data: {}

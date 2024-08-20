@@ -1,0 +1,62 @@
+version: "2.1"
+
+services:
+    # Nextcloud: Web-based file storage and collaboration platform
+    nextcloud:
+        image: lscr.io/linuxserver/nextcloud:latest
+        container_name: nextcloud
+        
+        environment:
+            - PUID=1000 # User ID (replace)
+            - PGID=1000 # Group ID (replace)
+            - TZ=Europe/Lisbon # Timezone (replace)
+        
+        volumes:
+            - /path/to/nextcloud/config:/config # Config files (replace path)
+            - /path/to/nextcloud/data:/data # Data files (replace path)
+        
+        ports:
+            - 4443:443 # HTTPS port
+        
+        restart: unless-stopped
+        depends_on:
+            - db
+            - redis
+            - av
+
+    # PostgreSQL: Database for Nextcloud
+    db:
+        image: postgres:15
+        container_name: postgres
+        restart: unless-stopped
+        
+        ports:
+            - 5432:5432 # Database port
+        
+        environment:
+            POSTGRES_USER: 'your_db_user' # DB user (replace)
+            POSTGRES_PASSWORD: 'your_db_password' # DB password (replace)
+            POSTGRES_DB: 'your_db_name' # DB name (replace)
+        
+        volumes:
+            - /path/to/nextcloud/db:/var/lib/postgresql/data/ # DB data (replace path)
+
+    # Redis: Caching service for Nextcloud
+    redis:
+        image: redis:alpine
+        container_name: redis
+        restart: unless-stopped
+        
+        ports:
+            - 6379:6379 # Redis port
+        
+        command: redis-server --requirepass your_redis_password # Redis password (replace)
+
+    # ClamAV: Antivirus service for scanning files in Nextcloud
+    av:
+        image: mkodockx/docker-clamav:alpine
+        container_name: clamav
+        restart: unless-stopped
+        
+        ports:
+            - 3310:3310 # ClamAV port
